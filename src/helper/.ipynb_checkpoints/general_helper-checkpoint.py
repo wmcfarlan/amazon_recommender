@@ -59,23 +59,13 @@ def feature_colon_value(my_list):
 
 
 
-def sample_hyperparameters():
-    """
-    Yield possible hyperparameter choices.
-    """
-
-    while True:
-        yield {
-            "no_components": np.random.randint(16, 100),
-            "learning_schedule": np.random.choice(["adagrad", "adadelta"]),
-            "loss": np.random.choice(["bpr", "warp", "warp-kos"]),
-            "learning_rate": np.random.exponential(0.05),
-            "item_alpha": np.random.exponential(1e-8),
-            "max_sampled": np.random.randint(5, 15),
-            "num_epochs": np.random.randint(5, 100),
-        }
+def unpack(row):
+    if isinstance(row, dict):
+        for k, v in row.items():
+            return v
+    else:
+        0
         
-
 
 if __name__ == '__main__':
     print('main')
