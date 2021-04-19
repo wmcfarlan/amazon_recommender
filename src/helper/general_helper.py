@@ -25,6 +25,18 @@ def getDF(path):
     return pd.DataFrame.from_dict(df, orient='index')
 
 
+def review_map(row):
+    """
+    helper function, maps high, medium, low to count of apps reviewed
+    """
+    
+    if row >= 41:
+        return 'high'
+    if row >= 14 and row < 41:
+        return 'medium'
+    else:
+        return 'low'
+    
 if __name__ == '__main__':
     print('main')
     
