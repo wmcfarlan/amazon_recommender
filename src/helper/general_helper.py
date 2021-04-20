@@ -32,14 +32,15 @@ def review_map(row):
     """
     helper function, maps high, medium, low to count of apps reviewed
     """
-    
-    if row >= 41:
+    if row >= 133:
+        return 'very_high'
+    elif row < 133 and row >= 41:
         return 'high'
-    if row >= 14 and row < 41:
+    elif row < 41 and row >= 18:
         return 'medium'
     else:
         return 'low'
-    
+
     
 def feature_colon_value(my_list):
     """
@@ -49,7 +50,7 @@ def feature_colon_value(my_list):
    
     """
     result = []
-    ll = ['free:','prod_review_counts:', 'categories:']
+    ll = ['price:','prod_review_counts:', 'categories:', 'brand:']
     aa = my_list
     for x, y in zip(ll, aa):
         res = str(x) +""+ str(y)
