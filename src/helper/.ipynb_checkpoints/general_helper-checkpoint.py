@@ -50,7 +50,7 @@ def feature_colon_value(my_list):
    
     """
     result = []
-    ll = ['price:','prod_review_counts:', 'categories:', 'brand:']
+    ll = ['prod_review_counts:', 'salesRank:', 'price:']
     aa = my_list
     for x, y in zip(ll, aa):
         res = str(x) +""+ str(y)
