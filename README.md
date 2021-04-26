@@ -40,46 +40,6 @@ To make predictions on exsisting users, from ```predictor``` directory, run ```g
 
 To get a better visual understanding of predictions, from ```keras_predictions.py``` run the ```print_images``` function on the embedded recommendations list within the returned dictionary.
 
-# Analysis methods
-
-The tech stack consists of Python 3, Numpy, Pandas, Beautiful Soup, Linguistic Inquiry and Word Count (LIWC), Natural Language Toolkit (NLTK), Scikit-Learn, Matplotlib, HTML, CSS, Tableau, Flask, and Heroku.
-
-Two ```csv``` files, the results of the webscraping, are stored in the ```data``` directory. 
-
-```ted-main.csv``` has the metadata for 2638 TED Talks- all talks featured on TED.com from 2006 through 2017.
-```transcripts.csv``` contains the transcripts for 2542 talks - the transcripts are not available for every talk.
-
-Four text transcript files are also stored in the data directory. These transcripts cannot be stored in a CSV because they are larger than the 32,767 character limit for a cell.
-
-
-To prepare the dataset for analyses:
-
-From the ```src``` directory of the repo, run the following code:
-
-```python assemble.py```
-
-```python annotate.py```
-
-```python process-text.py```
-
-These scripts: 
-- join large transcripts to dataframe for analysis
-- drop rows with missing transcripts
-- remove talks centered around music performances
-- remove talks with more than 1 speaker
-- create features like 'applause', 'laughter' from transcript
-- normalize ratings counts to account for number of times the talk has been viewed
-- divide transcripts into halves and quarters
-- add results of LIWC analysis and create emotion word change features 
-
-Edits to transcripts were done by script and by hand to remove question and answer sections and conversations with multiple speakers.
-
-If structural changes to the cleaning and feature engineering are required, rerun the results of ```annotate.py```, the dataset in ```all_after_annotate.xls```, through LIWC module to produce per document word category ratios. A license with LIWC is required and is available at [liwc.net](http://www.liwc.net)</a>.
-
-After running the 3 scripts above, you have a final dataset ```all_with_liwc_segmented.xls``` with features ready for statistical models (93.5 MB).
-
-To see an example of this, please refer to to the notebook within ```predictor``` directory.
-
 ---
 
 # Amazon Recommender Deep Dive
