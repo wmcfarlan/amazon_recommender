@@ -1,8 +1,3 @@
-from io import BytesIO
-import urllib
-import cv2
-import sys
-
 sys.path.append('../models')
 from rec_net import *
 
@@ -57,6 +52,21 @@ warnings.filterwarnings("ignore")
 
 
 class get_predictions:
+    """
+    Creates predictions for each item in pivot_df space to fill out missing data
+
+
+    Arguments
+    ---------
+    model: sklearn regressor, the parameters can be user selected
+
+
+    Returns
+    ---------
+    Returns a dictionary with the name of each product and predictions for each user
+
+        """
+        
 
     def __init__(self, dataframe):
         self.dataframe = dataframe

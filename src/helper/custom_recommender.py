@@ -251,13 +251,7 @@ class custom_predictor:
 
         
         
-        
-class cluster_rec:
     
-    def __init__ (self):
-        pass
-        
-        
         
 if __name__ == "__main__":
     print('main')
