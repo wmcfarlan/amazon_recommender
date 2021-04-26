@@ -140,9 +140,10 @@ class get_predictions:
         self.model.train_on_batch(self.x_train[:1], self.y_train[:1])
         self.model.load_weights('../models/model_weights')
 
-    def get_user_preds(self):
+    def get_user_preds(self, num_id):
+        
 
-        user_id = self.dataframe.reviewerID.sample(1).iloc[0]
+        user_id = self.userencoded2user[num_id]
 
         products_bought_by_user = self.dataframe[self.dataframe.reviewerID == user_id]
         x = self.dataframe[self.dataframe.user == user_id]['product'].values
@@ -179,25 +180,27 @@ class get_predictions:
             top_products_user)][['asin', 'title', 'imUrl']].drop_duplicates()
         self.item_dict = defaultdict(list)
         for row in original_df_rows.itertuples():
-            url = row.imUrl
+            title = row['title']
+#             url = row.imUrl
             # image = Image.open(requests.get(url, stream=True).raw)
-            self.item_dict['bought'].append(url)
+            self.item_dict['bought'].append(title)
 
         recommended_products = self.original_dataframe[self.original_dataframe["asin"].isin(
             recommended_product_ids)][['asin', 'title', 'imUrl']].drop_duplicates()
         for row in recommended_products.itertuples():
-            url = row.imUrl
+            title = row['title']
+#             url = row.imUrl
             # image = Image.open(requests.get(url, stream=True).raw)
-            self.item_dict['recommended'].append(url)
+            self.item_dict['recommended'].append(title)
 
-    def process(self):
+    def process(self, num_id):
         self.prepare_dataframe()
         self.get_mappings()
         self.set_mappings()
         self.normalize()
         self.train_test()
         self.model()
-        self.get_user_preds()
+        self.get_user_preds(num_id)
         return self.item_dict
 
 
@@ -349,3 +352,4 @@ if __name__ == "__main__":
     print("Top 5 Recommended Items For User")
     print("--------------------------------")
     print_imgs(item_dict['recommended'])
+    

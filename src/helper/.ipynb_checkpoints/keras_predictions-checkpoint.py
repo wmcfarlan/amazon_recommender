@@ -141,14 +141,18 @@ class get_predictions:
         self.model.load_weights('../../models/model_weights')
 
     def get_user_preds(self):
-
+        
+        # randomly generate user data
         user_id = self.dataframe.reviewerID.sample(1).iloc[0]
-
+        
+        
+        # set products bought by user and not bought
         products_bought_by_user = self.dataframe[self.dataframe.reviewerID == user_id]
         x = self.dataframe[self.dataframe.user == 1]['product'].values
         products_not_bought = self.dataframe[~self.dataframe['asin'].isin(
             x)]['asin'].unique()
-
+        
+        # encode products correctly
         products_not_bought = list(
             set(products_not_bought).intersection(
                 set(self.product2product_encoded.keys()))
@@ -156,15 +160,19 @@ class get_predictions:
 
         products_not_bought = [
             [self.product2product_encoded.get(x)] for x in products_not_bought]
-
+        
+        
+        # encode users correctly
         user_encoder = self.user2user_encoded.get(user_id)
         user_product_array = np.hstack(
             ([[user_encoder]] * len(products_not_bought), products_not_bought)
         )
-
+        
+        # get ratings for each unsed product
         ratings = self.model.predict(user_product_array).flatten()
         top_ratings_indices = ratings.argsort()[-10:][::-1]
 
+        
         recommended_product_ids = [
             self.product_encoded2product.get(products_not_bought[x][0]) for x in top_ratings_indices
         ]
