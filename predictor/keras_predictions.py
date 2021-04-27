@@ -52,27 +52,32 @@ warnings.filterwarnings("ignore")
 
 
 class get_predictions:
+    
     """
-    Creates predictions for each item in pivot_df space to fill out missing data
+    gets predictions for a spesific user
 
 
     Arguments
     ---------
-    model: sklearn regressor, the parameters can be user selected
+    dataframe: dataframe containing user review data and product data
 
 
     Returns
     ---------
-    Returns a dictionary with the name of each product and predictions for each user
+    Returns a dictionary populated with purchase history and predictions
 
-        """
-        
+    """   
 
     def __init__(self, dataframe):
         self.dataframe = dataframe
         self.original_dataframe = dataframe
 
     def prepare_dataframe(self):
+        
+        """
+        This function reduces the dataframe in order to better handle sparsity in model training
+        """
+        
         self.dataframe = self.dataframe[self.dataframe['title'].notna()]
 
         # select reviewer and product values
@@ -95,6 +100,13 @@ class get_predictions:
         self.dataframe = self.dataframe[['reviewerID', 'asin', 'overall']]
 
     def get_mappings(self):
+        
+        """
+        As keras requires reviewerID to be strictly numerical as well as asin, this function
+        sets dictionaries with numerical and original identifiers. This allows us to transition to and from for
+        easier interpretation later
+        """
+        
         # unique list of uers and product ids
         user_ids = self.dataframe['reviewerID'].unique().tolist()
         product_ids = self.dataframe['asin'].unique().tolist()
@@ -109,6 +121,11 @@ class get_predictions:
             i: x for i, x in enumerate(product_ids)}
 
     def set_mappings(self):
+        
+        """
+        dictionary mappings are applied to reviewerID and asin so model can use data in the corrected format
+        """
+        
         self.dataframe['user'] = self.dataframe['reviewerID'].map(
             self.user2user_encoded)
         self.dataframe['product'] = self.dataframe['asin'].map(
@@ -127,6 +144,10 @@ class get_predictions:
         self.max_rating = max(self.dataframe['overall'])
 
     def normalize(self):
+        
+        """
+        review scores 1 to 5 are normalized so the model can better handle the data.
+        """
 
         # set x and y with normalization
         self.x = self.dataframe[['user', 'product']].values
@@ -143,6 +164,11 @@ class get_predictions:
         return self.x_train, self.y_train
 
     def model(self):
+        
+        """
+        Load the saved Keras model, train it on a single instance with saved current weights
+        """
+        
         self.model = RecommenderNet(
             num_users=8665, num_products=4342, embedding_size=50)
         self.model.compile(loss=tf.keras.losses.MeanSquaredError(),
@@ -152,6 +178,21 @@ class get_predictions:
 
     def get_user_preds(self, num_id):
         
+        """
+        Make a prediction for a spesific user
+        
+        
+        Arguments
+        ---------
+        
+        num_id: integer, a number between 0 and 8665. This number is a unique number associated with
+            an exsisting user than has provided reviews.
+            
+        Returns
+        --------
+        item_dict: dictionary filled with bought items and recommended items.
+        
+        """
 
         user_id = self.userencoded2user[num_id]
 
@@ -191,19 +232,25 @@ class get_predictions:
         self.item_dict = defaultdict(list)
         for row in original_df_rows.itertuples():
             title = row['title']
-#             url = row.imUrl
+            url = row.imUrl
             # image = Image.open(requests.get(url, stream=True).raw)
-            self.item_dict['bought'].append(title)
+            self.item_dict['bought'].append(url)
 
         recommended_products = self.original_dataframe[self.original_dataframe["asin"].isin(
             recommended_product_ids)][['asin', 'title', 'imUrl']].drop_duplicates()
         for row in recommended_products.itertuples():
             title = row['title']
-#             url = row.imUrl
+            url = row.imUrl
             # image = Image.open(requests.get(url, stream=True).raw)
-            self.item_dict['recommended'].append(title)
+            self.item_dict['recommended'].append(url)
 
+            
     def process(self, num_id):
+        
+        """
+        pipeline to run all needed functions to get a recommendation
+        """
+        
         self.prepare_dataframe()
         self.get_mappings()
         self.set_mappings()
@@ -215,6 +262,11 @@ class get_predictions:
 
 
 def print_imgs(url_list):
+    
+    """
+    displays images from prediction dictionary, will return 5 images in the format of 1 row, 5 columns
+    """
+    
     fig = plt.figure(figsize=(10, 7))
 
     # setting values to rows and column variables
@@ -264,6 +316,11 @@ def print_imgs(url_list):
 
 
 def print_imgs_cold(url_list):
+    
+    """
+    displays top 10 items, built for our cold start visualization
+    """
+    
     fig = plt.figure(figsize=(10, 7))
 
     # setting values to rows and column variables
@@ -349,11 +406,15 @@ def print_imgs_cold(url_list):
 
 
 if __name__ == "__main__":
-    print('main')
+    
+    """
+    Lets get recommendations for user 5
+    """
 
     df = pd.read_csv('../merged_df.csv')
-
-    item_dict = get_predictions(df).process()
+    user_id = 5
+    
+    item_dict = get_predictions(df).process(user_id)
 
     print("Top 5 Purchased Items For User")
     print("------------------------------")

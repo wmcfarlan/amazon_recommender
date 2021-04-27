@@ -9,14 +9,14 @@ Results: I developed a dual approach to recommending. As a cold start solution, 
 
 
 # Background & Motivation
-Recommenders are truly collaborative in nature. People are looking for products they will enjoy, and vendors are looking to better connect with consumers and sell their products. Outside of product sales, recommenders are very flexible and can be used in a variety of environments. In regards to model development, it is important to create robust models which are capable of capturing the complexity of the user and the recommended product, but to also consider the importance of scale.
+Recommenders are truly collaborative in nature. People are looking for products they will enjoy, and vendors are looking to better connect with consumers and sell their products. Outside of product sales, recommenders are very flexible and can be used in a variety of environments. In regards to model development, it is important to create robust models which are capable of capturing the complexity of the user and the recommended product. It is also important to consider a solution that can scale with big data.
 
 Currently we live in a world with increasing complexity and ambiguity. With more potential choices than ever, people tend to get caught in the paradox of choice. With too many choices our ability to make a choice becomes a much more difficult task. Personalized recommenders are a great solution to this problem. As such, it should be our goal to create recommenders that work, and recommenders the consumers trust.
 
 ## The Problem
-How can companies direct the right products to the right people?
+* Companies need to direct their products to interested consumers.
 
-How can consumers find products they can enjoy?
+* Consumers are looking for the right products they can enjoy.
 
 ## The Solution
 
@@ -33,13 +33,13 @@ Data was collected from [ucsd.edu](http://jmcauley.ucsd.edu/data/amazon/links.ht
 ```5_Core.csv``` contains reviewer id, product id, and review text.
 ```metadata.csv``` contains product information.
 
-To prepare the dataset:
+To make predictions:
 
-From ```src/helper``` run preprocess_pipeline class on the two csv files. This will returned a preprocessed merged dataset.
+* From ```src/helper``` run preprocess_pipeline class on the two csv files. This will returned a preprocessed merged dataset.
 
-To make predictions on existing users, from ```predictor``` directory, run ```get_predictions class``` from```keras_predictions.py```. This returns a dictionary of bought items and recommended items.
+* To make predictions on existing users, from ```predictor``` directory, run ```get_predictions class``` from ```keras_predictions.py```. This returns a dictionary of bought items and recommended items.
 
-To get a better visual understanding of predictions, from ```keras_predictions.py``` run the ```print_images``` function on the embedded recommendations list within the returned dictionary.
+* To get a better visual understanding of predictions, from ```keras_predictions.py``` run the ```print_images``` function on the embedded recommendations list within the returned dictionary.
 
 ---
 
@@ -51,7 +51,7 @@ The original dataset contained 346,355 rows of 18,534 unique items and 38,609 un
 
 <img src="images/dist_of_reviews.png" width="600"/>
 
-When looking at the distribution of products reviewed, we can see this follows a similar exponential trend. Most products have been reviewed 5 to 20 times while the max is around 1100 reviews.
+When looking at the distribution of products reviewed, we can see this follows a similar exponential trend. Most products have been reviewed 5 to 20 times while the max is around 1100 reviews. These trends are commonly seen on product review data and represent the problem with sparsity.
 
 <img src="images/dist_of_prods.png" width="600"/>
 
@@ -60,7 +60,7 @@ When going deeper into the product review distribution, it can be seen that most
 
 <img src="images/dist_of_reviews_per_product.png" width="600"/>
 
-When looking at the distribution of reviews per user, it can be seen that most reviewers rate items a 5. This makes sense as people are more motivated to review products they love.
+When looking at the distribution of reviews per user, it can be seen that most reviewers rate items a 5. This makes sense as people are more motivated to review products they enjoy.
 
 <img src="images/dist_of_reviews_2.png" width="600"/>
 
